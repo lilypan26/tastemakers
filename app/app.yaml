@@ -1,0 +1,9 @@
+runtime: python 37
+
+instance_class: F1
+
+env_variables:
+  MYSQL_USER: 'root'
+  MYSQL_PASSWORD: 'sw@thi'
+  MYSQL_DB: 'swathi-table'
+  MYSQL_HOST: '50.200.239.142'
