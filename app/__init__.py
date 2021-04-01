@@ -4,8 +4,6 @@ import sqlalchemy
 from flask import Flask
 from yaml import load, Loader
 
-
-
 def init_connection_engine():
     """ initialize database setup
     Takes in os variables from environment if on GCP
@@ -21,7 +19,7 @@ def init_connection_engine():
             variables = load(open("app.yaml"), Loader=Loader)
         except OSError as e:
             print("Make sure you have the app.yaml file setup")
-            os.exit()
+            exit()
 
         env_variables = variables['env_variables']
         for var in env_variables:

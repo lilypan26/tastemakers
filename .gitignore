@@ -1,4 +1,4 @@
 app.yaml
 .venv
 .vscode
-app/__pychache__
+__pycache__
