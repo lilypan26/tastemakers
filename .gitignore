@@ -1,0 +1,4 @@
+app.yaml
+.venv
+.vscode
+app/__pychache__
