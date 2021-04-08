@@ -23,6 +23,29 @@ def fetch_tastemaker() -> dict:
     return recipe_list
 
 
+def fetch_tomoko() -> dict:
+    """Reads all tasks listed in the todo table
+
+    Returns:
+        A list of dictionaries
+    """
+
+    conn = db.connect()
+    query_results = conn.execute("Select * from Recipe LIMIT 15;").fetchall()
+
+    conn.close()
+    recipe_list = []
+    # for result in query_results:
+    #     print(result)
+        # item = {
+        #     "id": result[0],
+        #     # "task": result[1],
+        #     # "status": result[2]
+        # }
+        # recipe_list.append(item)
+
+    return recipe_list
+
 def update_task_entry(task_id: int, text: str) -> None:
     """Updates task description based on given task_id
 
