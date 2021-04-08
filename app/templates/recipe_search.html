@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}
+Login Page
+{% endblock %}
+
+{% block content %}
+<body>
+
+    <!-- <div class="modal fade" id="task-modal" tabindex="-1" aria-labelledby="Label" aria-hidden="true"> -->
+    <!-- <div class="modal-dialog">
+        <div class="modal-content"> -->
+        <!-- <div class="modal-header">
+            <h5 class="modal-title" id="Label">Add a task</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="task-form-display">Task</span>
+                <input type="text" class="form-control" placeholder="Description of task" aria-label="task-name" aria-describedby="basic-addon1">
+            </div>
+        </div> -->
+       <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="submit-task" type="button" class="btn btn-primary">Save changes</button>
+        </div>
+        </div>
+    </div> -->
+        <!-- </div> -->
+<div class="container">
+    <label for="search_entry"><b>Search</b></label>
+    <input type="text" placeholder="Start Searching..." name="search_entry" required>
+    <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+    <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Tomoko</button>
+    <!-- <button type="submit" class="btn btn-outline-info btn-sm" onclick="teresa()">Teresa</button>
+    <button type="submit" class="btn btn-outline-info btn-sm" onclick="swathi()">Swathi</button>
+    <button type="submit" class="btn btn-outline-info btn-sm" onclick="lily()">Lily</button> -->
+<!-- </div>
+    <div class="relative" style="text-align: center;">
+        <p>
+            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/grocery'">Search Recipes</button>
+            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/grocery'">My Lists</button>
+            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/grocery'">Account</button>
+        </p> -->
+    </div>
+</body>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='script/searchquery.js') }}"></script>
+{% endblock %}

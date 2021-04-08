@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+Login Page
+{% endblock %}
+
+{% block content %}
+<body>
+    <div style="text-align: center;">
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipe_search'">Add New List</button>
+    </div>
+    <tbody>
+        {% if items|length > 0 %}
+        <div class="container table-responsive">          
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="task">List Name</th>
+                    <th class="update">Edit</th>
+                    <th class="update">Remove</th>
+                </tr>
+                </thead>
+        
+                <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipe_search'">{{item.id}}</button>
+                        </td>
+                        
+                        <td><button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#task-modal" data-source="{{item.id}}" data-content="{{item.task}}"><i class="fa fa-pen fa-1" aria-hidden="true"></i></button></td>
+        
+                        <td><button class="btn btn-outline-secondary btn-sm remove" data-source="{{item.id}}" type="button"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% else %}
+            <p>Make a new list!</p>
+        {% endif %}
+    </tbody>
+</body>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
