@@ -273,7 +273,7 @@ def fetch_user(username: str, password: str):
 
 def fetch_recipe_by_name(name) -> list:
     conn = db.connect()
-    query_results = conn.execute("SELECT * FROM Recipe WHERE name LIKE '%%name%%';").fetchall()
+    query_results = conn.execute("SELECT recipe_id, name FROM Recipe WHERE name LIKE '%%{}%%';".format(name)).fetchall()
 
     conn.close()
     recipe_list = []
