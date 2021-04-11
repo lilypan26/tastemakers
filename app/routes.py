@@ -75,6 +75,7 @@ def view_lists():
 def userhome():
     # items = db_helper.fetch_tastemaker()
     return render_template("user_home.html")
+
 # @app.route('/user/<username>')
 # def profile(username):
 #     return '{}\'s profile'.format(escape(username))")
@@ -102,3 +103,12 @@ def recipeSearch():
 def recipeSearchResults():
     tomoko_results = db_helper.fetch_tomoko()
     return render_template("recipe_search.html", items=tomoko_results)
+
+@app.route("/recipesearch/healthy")
+def healthyRecipes():
+    tomoko_results = db_helper.fetch_healthy()
+    return render_template("recipe_search.html", items=tomoko_results)
+
+# @app.route('/recipe')
+# def profile():
+#     return '{}\'s profile'.format(escape(username))")

@@ -28,10 +28,56 @@ Login Page
     </div> -->
         <!-- </div> -->
 <div class="container">
-    <label for="search_entry"><b>Search</b></label>
-    <input type="text" placeholder="Start Searching..." name="search_entry" required>
-    <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
-    <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Tomoko</button>
+    <div style="text-align: center;">
+        <form action="/action_page.php" onsubmit="return myFunction()">
+            <label for="search_entry"><b></b></label>
+            <input type="text" placeholder="Search for Recipes..." name="search_entry" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+        </form>
+        <script>
+            function myFunction() {
+                var recipe = document.getElementById("search_entry").value;
+                submitOK = "true";
+            }
+        </script>
+        <br>
+        <br>
+        <b>Filter by tag: </b>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Tomoko</button>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/healthy'">Healthy</button>
+    </div>
+    <div class="container table-responsive">          
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="recipe-id">#</th>
+                <th class="recipe">Recipe Name</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr class='clickable-row' data-href="/recipesearch/{{item.id}}">
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                    </tr>
+                    {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+    <!-- <script>
+        function CreateTableFromJSON() {
+            // EXTRACT column names FOR HTML HEADER. 
+            var col = [];
+            for (var i = 0; i < myBooks.length; i++) {
+                for (var key in myBooks[i]) {
+                    if (col.indexOf(key) === -1) {
+                        col.push(key);
+                    }
+                }
+            }
+        }
+    </script> -->
     <!-- <button type="submit" class="btn btn-outline-info btn-sm" onclick="teresa()">Teresa</button>
     <button type="submit" class="btn btn-outline-info btn-sm" onclick="swathi()">Swathi</button>
     <button type="submit" class="btn btn-outline-info btn-sm" onclick="lily()">Lily</button> -->

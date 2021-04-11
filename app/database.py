@@ -1,7 +1,7 @@
 """Defines all the functions related to the database"""
 from app import db
 
-def fetch_tastemaker() -> dict:
+def fetch_tastemaker() -> list:
     """Reads all tasks listed in the todo table
 
     Returns:
@@ -10,16 +10,46 @@ def fetch_tastemaker() -> dict:
 
     conn = db.connect()
     query_results = conn.execute("Select * from Recipe LIMIT 15;").fetchall()
+    #print(query_results)
     conn.close()
     recipe_list = []
     for result in query_results:
         item = {
             "id": result[0],
-            # "task": result[1],
+            "name": result[5],
             # "status": result[2]
         }
         recipe_list.append(item)
+    #print(recipe_list)
+    return recipe_list
 
+def fetch_healthy() -> list:
+    """Reads all tasks listed in the todo table
+
+    Returns:
+        A list of dictionaries
+    """
+
+    conn = db.connect()
+    query_results = conn.execute("(SELECT r.recipe_id, r.name, r.calories as Calories " +
+                                "FROM Recipe r JOIN RecipeHasTags rt ON r.recipe_id = rt.recipe_id " + 
+                                "WHERE rt.tag_name = 'healthy' OR rt.tag_name = 'very-low-carbs' AND r.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING COUNT(rating) > 4) " +
+                                "GROUP BY r.recipe_id) " + 
+                                "UNION " + 
+                                "(SELECT r.recipe_id, r.name, r.calories as Calories " +
+                                "FROM Recipe r JOIN RecipeHasTags rt ON r.recipe_id = rt.recipe_id " +
+                                "WHERE r.sugar < 50 AND rt.tag_name = 'desserts' AND r.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING AVG(rating) > 2)) LIMIT 15;").fetchall()
+    #print(query_results)
+    conn.close()
+    recipe_list = []
+    for result in query_results:
+        item = {
+            "id": result[0],
+            "name": result[1],
+            # "status": result[2]
+        }
+        recipe_list.append(item)
+    #print(recipe_list)
     return recipe_list
 
 
