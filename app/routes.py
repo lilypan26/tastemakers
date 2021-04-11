@@ -110,13 +110,14 @@ def userhome():
 def recipeSearch():
     return render_template("recipe_search.html", items=[])
 
-@app.route("/hello")
+@app.route("/hello", methods = ['GET', 'POST'])
 def hello():
-    print("hello", file=stderr)
-    if request.method == 'GET':
-        print("yes", file=stderr)
+    print(request.method)
+    if request.method == 'POST':
+        #print(request.form['search_entry'])
         default = 'empty'
         data = request.form.get('search_entry', default)
+        print(data)
         if data == "" or data == default:
             return render_template("recipe_search.html")
         items = db_helper.fetch_recipe_by_name(data)
