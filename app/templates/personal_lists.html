@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}
-Login Page
+Personal Lists
 {% endblock %}
 
 {% block content %}
 <body>
-    <div style="text-align: center;">
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipe_search'">Add New List</button>
-    </div>
+    <form action="/view_lists/create_new_list", method="GET">
+        <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+        <label for="list_name"><b></b></label>
+        <input type="text" placeholder="New list name" name="list_name" required >
+        <div style="text-align: center;">
+        <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+        </div>
+    </form>
+    <!-- <div style="text-align: center;">
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="create_new_list()">"Add List</button>
+    </div> -->
     <tbody>
         {% if items|length > 0 %}
         <div class="container table-responsive">          
@@ -24,10 +32,10 @@ Login Page
                 {% for item in items %}
                     <tr>
                         <td>
-                            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipe_search'">{{item.id}}</button>
+                            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipe_search'">{{item.name}}</button>
                         </td>
                         
-                        <td><button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#task-modal" data-source="{{item.id}}" data-content="{{item.task}}"><i class="fa fa-pen fa-1" aria-hidden="true"></i></button></td>
+                        <td><button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#submit-list" data-content="{{item.task}}"><i class="fa fa-pen fa-1" aria-hidden="true"></button></td>
         
                         <td><button class="btn btn-outline-secondary btn-sm remove" data-source="{{item.id}}" type="button"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button></td>
                     </tr>

@@ -14,23 +14,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/custom.css') }}">
     <title>{% block title %}{% endblock %} </title>
     {% endblock %}
-    <!-- <style>
-      .container {
-        display: flex;
-        align-items: center;
-        justify-content: center
-      }
-      img {
-        max-width: 100%
-      }
-      .image {
-        flex-basis: 40%
-      }
-      .text {
-        font-size: 20px;
-        padding-left: 0px;
-      }
-    </style> -->
+
   </head>
   <!-- <div class="header">
     <img src="../static/img/apple-touch-icon.png" alt="logo" />
@@ -40,13 +24,11 @@
   
 
   <body>
-    <main role="main" class="container extra-bottom" style="text-align: center;">
-      <div class="block">
-        <figure><img src="../static/img/apple-touch-icon.png" alt=""></figure>
-        <h1 class="title">TasteMakers</h1>
-        <p><mark>Be the maker of your own taste.</mark></p>
-      </div>
-    </main>
+    <div class="container" style="text-align: center;">
+      <img src="../static/img/apple-touch-icon.png">
+      <h1>TasteMakers</h1>
+      <p><mark>Be the maker of your own taste.</mark></p>
+  </div>
      <!-- <div class="container">
       <div class="image">
         <img src="../static/img/apple-touch-icon.png">

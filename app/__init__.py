@@ -3,6 +3,7 @@ import os
 import sqlalchemy
 from flask import Flask
 from yaml import load, Loader
+from flask_sqlalchemy import SQLAlchemy
 
 def init_connection_engine():
     """ initialize database setup
@@ -39,6 +40,7 @@ def init_connection_engine():
 
 
 app = Flask(__name__)
+# other_db = SQLAlchemy(app)
 db = init_connection_engine()
 
 # To prevent from using a blueprint, we use a cyclic import

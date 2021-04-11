@@ -61,20 +61,29 @@ def account_info():
     items = db_helper.fetch_tastemaker()
     return render_template("account_info.html", items=items)
 
-@app.route("/recipe_search")
-def recipe_search():
-    items = db_helper.fetch_tastemaker()
-    return render_template("recipe_search.html", items=items)
-
 @app.route("/view_lists")
 def view_lists():
-    items = db_helper.fetch_tastemaker()
+    items = db_helper.fetch_personal_lists()
+    return render_template("personal_lists.html", items=items)
+
+@app.route("/view_lists/create_new_list", methods=['GET'])
+def create_new_list(name):
+    if request.method == 'GET':
+        default = 'empty'
+        data = request.form.get('list_name', default)
+        if data == "" or data == default:
+            return render_template("personal_lists.html")
+        db_helper.create_list(data)
+        items = db_helper.fetch_personal_lists()
+        return render_template("personal_lists.html", items=items)
     return render_template("personal_lists.html", items=items)
 
 @app.route("/userhome")
 def userhome():
-    # items = db_helper.fetch_tastemaker()
+    # is this right?
+    items = db_helper.add_user() 
     return render_template("user_home.html")
+
 
 # @app.route('/user/<username>')
 # def profile(username):
@@ -94,21 +103,55 @@ def userhome():
 # @app.route("/favorites")
 # def favorites():
 
+# @app.route('/login', methods = ['GET', 'POST'])
+
+
 @app.route("/recipesearch")
 def recipeSearch():
+    return render_template("recipe_search.html", items=[])
 
-    return render_template("recipe_search.html", results=[])
+@app.route("/hello")
+def hello():
+    print("hello", file=stderr)
+    if request.method == 'GET':
+        print("yes", file=stderr)
+        default = 'empty'
+        data = request.form.get('search_entry', default)
+        if data == "" or data == default:
+            return render_template("recipe_search.html")
+        items = db_helper.fetch_recipe_by_name(data)
+        return render_template("recipe_search.html", items=items)
+    return render_template("login.html", items=[])
 
 @app.route("/recipesearch/tomoko")
 def recipeSearchResults():
     tomoko_results = db_helper.fetch_tomoko()
     return render_template("recipe_search.html", items=tomoko_results)
 
+@app.route("/recipesearch/teresa")
+def recipeSearchResults_teresa():
+    print("here")
+    teresa_results = db_helper.fetch_teresa()
+    return render_template("recipe_search.html", items=teresa_results)
+    
+@app.route("/recipesearch/swathi")
+def recipeSearchResults_swathi():
+    swathi_results = db_helper.fetch_swathi()
+    return render_template("recipe_search.html", items=swathi_results)
+
 @app.route("/recipesearch/healthy")
 def healthyRecipes():
-    tomoko_results = db_helper.fetch_healthy()
-    return render_template("recipe_search.html", items=tomoko_results)
+    healthy_results = db_helper.fetch_healthy()
+    return render_template("recipe_search.html", items=healthy_results)
 
+@app.route('/recipesearch/<id>')
+def get_recipe(id):
+    print(id)
+    recipe_info = db_helper.fetch_recipe(id)
+    return render_template("recipe.html", items=recipe_info)
+
+# @app.route()
+# @app.roue("/recipesearch/<id>"):
 # @app.route('/recipe')
 # def profile():
 #     return '{}\'s profile'.format(escape(username))")

@@ -6,62 +6,38 @@ Login Page
 {% block content %}
 <body>
 
-    <!-- <div class="modal fade" id="task-modal" tabindex="-1" aria-labelledby="Label" aria-hidden="true"> -->
-    <!-- <div class="modal-dialog">
-        <div class="modal-content"> -->
-        <!-- <div class="modal-header">
-            <h5 class="modal-title" id="Label">Add a task</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <div class="modal-body">
-            <div class="input-group mb-3">
-                <span class="input-group-text" id="task-form-display">Task</span>
-                <input type="text" class="form-control" placeholder="Description of task" aria-label="task-name" aria-describedby="basic-addon1">
-            </div>
-        </div> -->
-       <!-- <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button id="submit-task" type="button" class="btn btn-primary">Save changes</button>
-        </div>
-        </div>
-    </div> -->
-        <!-- </div> -->
 <div class="container">
     <div style="text-align: center;">
-        <form action="/action_page.php" onsubmit="return myFunction()">
+        <form action="/hello", method="get">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <label for="search_entry"><b></b></label>
             <input type="text" placeholder="Search for Recipes..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
-        <script>
-            function myFunction() {
-                var recipe = document.getElementById("search_entry").value;
-                submitOK = "true";
-            }
-        </script>
         <br>
         <br>
         <b>Filter by tag: </b>
         <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Tomoko</button>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/swathi'">Swathi</button>
         <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/healthy'">Healthy</button>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/teresa'">Teresa</button>
     </div>
     <div class="container table-responsive">          
-        <table class="table">
+        <table class="table table-hover">
             <thead>
-            <tr>
-                <th class="recipe-id">#</th>
-                <th class="recipe">Recipe Name</th>
-            </tr>
+                <tr>
+                    <!-- <th class="recipe-id">#</th> -->
+                    <th class="recipe">Recipe Name</th>
+                </tr>
             </thead>
             <tbody>
                 {% for item in items %}
-                    <tr class='clickable-row' data-href="/recipesearch/{{item.id}}">
-                        <td>{{item.id}}</td>
-                        <td>{{item.name}}</td>
-                    </tr>
-                    {% endfor %}
-                
+                <tr style="transform: rotate(0);">
+                    <!-- <th></th> -->
+                        <!-- <td>{{item.id}}</td> -->
+                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.name}}</td>
+                </tr>
+                {% endfor %} 
             </tbody>
         </table>
     </div>
