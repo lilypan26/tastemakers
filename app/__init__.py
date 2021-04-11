@@ -3,7 +3,6 @@ import os
 import sqlalchemy
 from flask import Flask
 from yaml import load, Loader
-from flask_sqlalchemy import SQLAlchemy
 
 def init_connection_engine():
     """ initialize database setup
