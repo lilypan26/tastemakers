@@ -8,11 +8,78 @@ Login Page
 
 <div class="container">
     <div style="text-align: center;">
-        <form action="/hello", method="POST">
+        <form action="/recipesearch", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
-            <input type="text" placeholder="Search for Recipes..." name="search_entry" required >
+            <input type="text" placeholder="Search for Recipes by Name..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+        </form>
+        <form action="/tag_search", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Search for Recipes by Tag..." name="search_entry" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+        </form>
+        <form action="/time_search", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Search for Recipes by Time..." name="search_entry" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+        </form>
+        <form action="/num_ingr_search", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Search for Recipes by Number of Ingredients..." name="search_entry" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
+        </form>
+
+
+        INGREDIENT STUFF
+        <form action="/recipe_search/add_ingredient", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Recipe ID" name="recipe_id" required >
+            <input type="text" placeholder="Ingredient ID" name="ingredient" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Add</button>
+        </form>
+        <form action="/recipe_search/update_ingredient", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Recipe ID" name="recipe_id" required >
+            <input type="text" placeholder="Ingredient name to change..." name="ingredient_old" required >
+            <input type="text" placeholder="Ingredient name new.." name="ingredient_new" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Update</button>
+        </form>
+        <form action="/recipe_search/delete_ingredient", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Recipe ID" name="recipe_id" required >
+            <input type="text" placeholder="Ingredient name to delete..." name="ingredient" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Delete</button>
+        </form>
+
+        TAG STUFF
+        <form action="/recipe_search/add_tag", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Recipe ID" name="recipe_id" required >
+            <input type="text" placeholder="Tag Name" name="tag" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Add</button>
+        </form>
+        <form action="/recipe_search/update_tag", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Recipe ID" name="recipe_id" required >
+            <input type="text" placeholder="Old Tag Name..." name="tag_old" required >
+            <input type="text" placeholder="New Tag Name.." name="tag_new" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Update</button>
+        </form>
+        <form action="/recipe_search/delete_tag", method="POST">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            <!-- <label for="search_entry"><b></b></label> -->
+            <input type="text" placeholder="Recipe ID" name="recipe_id" required >
+            <input type="text" placeholder="Tag to delete..." name="tag" required >
+            <button type="submit" class="btn btn-outline-info btn-sm">Delete</button>
         </form>
         <br>
         <br>
@@ -26,7 +93,7 @@ Login Page
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <!-- <th class="recipe-id">#</th> -->
+                    <th class="recipe-id">#</th>
                     <th class="recipe">Recipe Name</th>
                 </tr>
             </thead>
@@ -34,7 +101,7 @@ Login Page
                 {% for item in items %}
                 <tr style="transform: rotate(0);">
                     <!-- <th></th> -->
-                        <!-- <td>{{item.id}}</td> -->
+                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.id}}</td>
                         <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.name}}</td>
                 </tr>
                 {% endfor %} 
@@ -70,4 +137,4 @@ Login Page
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='script/searchquery.js') }}"></script>
-{% endblock %}
+{% endblock %}p

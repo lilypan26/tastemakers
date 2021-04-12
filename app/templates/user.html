@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}
+Login Page
+{% endblock %}
+
+{% block content %}
+<body>
+
+<div class="container">
+    <div style="text-align: center;">
+        Create user
+        <form action="/account_info/create", method="post">
+          username
+          <input type="text" placeholder="username" name="user_entry"  >
+          email
+          <input type="text" placeholder="email" name="email_entry" >
+          password
+          <input type="text" placeholder="password" name="password_entry"  >
+          name
+          <input type="text" placeholder="name" name="name_entry"  >
+          <button type="submit" class="btn btn-outline-info btn-sm">Create</button>
+        </form>
+        
+        Update user
+        <form action="/account_info/update", method="post">
+            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+            username
+            <input type="text" placeholder="old username" name="old_entry"  >
+            email
+            <input type="text" placeholder="new username" name="new_entry" >
+
+            <button type="submit" class="btn btn-outline-info btn-sm">Update</button>
+        </form>
+
+        Delete user
+        <form action="/account_info/delete", method="post">
+          <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+          <input type="text" placeholder="username to delete" name="user_id_to_delete" required >
+          <button type="submit" class="btn btn-outline-info btn-sm">Delete</button>
+      </form>
+
+        Check user
+      <form action="/account_info/read", method="post">
+        <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+        username
+        <input type="text" placeholder="username" name="user_entry"  >
+        password
+        <input type="text" placeholder="password" name="password_entry"  >
+        <button type="submit" class="btn btn-outline-info btn-sm">Read</button>
+      </form>
+       </div>
+
+    </div>
+    <div class="container table-responsive">          
+        <table class="table">
+            <thead>
+                <tr>
+                    <!-- <th class="recipe-id">#</th> -->
+                    <th class="list name">Usernames</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr style="transform: rotate(0);">
+                        <td>{{item.username}}</td>
+                </tr>
+                {% endfor %} 
+            </tbody>
+
+        </table>
+        </div>
+</body>
+{% endblock %}
