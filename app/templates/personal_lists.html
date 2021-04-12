@@ -5,22 +5,51 @@ Personal Lists
 
 {% block content %}
 <body>
-    <form action="/view_lists/create_new_list", method="GET">
-        <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-        <label for="list_name"><b></b></label>
-        <input type="text" placeholder="New list name" name="list_name" required >
+    <div class="container">
         <div style="text-align: center;">
-        <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
-        </div>
+    <form action="/view_lists/add", method="POST">
+        <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+        <!-- <label for="search_entry"><b></b></label> -->
+        <input type="text" placeholder="Add New List..." name="search_entry" required >
+        <button type="submit" class="btn btn-outline-info btn-sm">Add</button>
     </form>
+    <form action="/view_lists/update", method="POST">
+        <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+        <!-- <label for="search_entry"><b></b></label> -->
+        <input type="text" placeholder="List to Change..." name="old_entry" required >
+        <input type="text" placeholder="New List Name..." name="new_entry" required >
+        <button type="submit" class="btn btn-outline-info btn-sm">Update</button>
+    </form>
+    <form action="/view_lists/delete", method="POST">
+        <!-- action="/action_page.php" onsubmit="return myFunction()" -->
+        <!-- <label for="search_entry"><b></b></label> -->
+        <input type="text" placeholder="List Name to Delete..." name="search_entry" required >
+        <button type="submit" class="btn btn-outline-info btn-sm">Delete</button>
+    </form>
+    </div>
+    </div>
     <!-- <div style="text-align: center;">
         <button type="submit" class="btn btn-outline-info btn-sm" onclick="create_new_list()">"Add List</button>
     </div> -->
-    <tbody>
-        {% if items|length > 0 %}
         <div class="container table-responsive">          
             <table class="table">
                 <thead>
+                    <tr>
+                        <!-- <th class="recipe-id">#</th> -->
+                        <th class="list name">List Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr style="transform: rotate(0);">
+                        <!-- <th></th> -->
+                            <!-- <td>{{item.id}}</td> -->
+                            <!-- <a href="/recipesearch/{{item.id}}" class="stretched-link"></a> -->
+                            <td>{{item.name}}</td>
+                    </tr>
+                    {% endfor %} 
+                </tbody>
+                <!-- <thead>
                 <tr>
                     <th class="task">List Name</th>
                     <th class="update">Edit</th>
@@ -40,13 +69,9 @@ Personal Lists
                         <td><button class="btn btn-outline-secondary btn-sm remove" data-source="{{item.id}}" type="button"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button></td>
                     </tr>
                 {% endfor %}
-                </tbody>
+                </tbody> -->
             </table>
             </div>
-        {% else %}
-            <p>Make a new list!</p>
-        {% endif %}
-    </tbody>
 </body>
 {% endblock %}
 

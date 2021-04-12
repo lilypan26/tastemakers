@@ -57,18 +57,17 @@ def fetch_recipe(id) -> list:
     recipe_id = int(id)
     conn = db.connect()
     query_results = conn.execute("Select * from Recipe  r WHERE r.recipe_id = %s;", recipe_id).fetchall()
-    print(query_results)
+    ing_res = conn.execute("Select ingredient_id FROM RecipeHasIngredients WHERE recipe_id = {}".format(recipe_id)).fetchall()
     conn.close()
-    recipe_list = []
-    # for result in query_results:
-    #     item = {
-    #         "id": result[0],
-    #         "name": result[5],
-    #         # "status": result[2]
-    #     }
-    #     recipe_list.append(item)
+    ingredients = []
+    for i in ing_res:
+        ingredients.append(get_ingredient_name(i[0]))
+    recipe = None
+    for result in query_results:
+        recipe =  Recipe(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], ingredients)
+
     # print(recipe_list)
-    return recipe_list
+    return recipe
     
 def fetch_healthy() -> list:
     """Reads all tasks listed in the todo table
@@ -151,9 +150,9 @@ def fetch_teresa() -> list:
 
     return recipe_list
 
-def fetch_personal_lists() -> list:
+def fetch_recipe_by_name(name) -> list:
     conn = db.connect()
-    query_results = conn.execute("SELECT * FROM PersonalizedList;").fetchall()
+    query_results = conn.execute("SELECT recipe_id, name FROM Recipe WHERE name LIKE '%%{}%%';".format(name)).fetchall()
 
     conn.close()
     recipe_list = []
@@ -161,17 +160,58 @@ def fetch_personal_lists() -> list:
         item = {
             "id": result[0],
             "name": result[1],
-            "date_created": result[2]
         }
         recipe_list.append(item)
 
     return recipe_list
 
-def update_list_entry(list_id: int, new_name: str) -> None:
+def fetch_recipe_by_tag(tag_name) -> list:
     conn = db.connect()
-    query = 'UPDATE PersonalizedList SET name = "{}" where list_id = {};'.format(new_name, list_id)
-    conn.execute(query)
+    #SELECT name FROM Recipe WHERE recipe_id IN (SELECT recipe_id from Tags WHERE tag_name LIKE “”
+    query_results = conn.execute("SELECT recipe_id, name FROM Recipe WHERE recipe_id IN (SELECT recipe_id FROM Tags WHERE tag_name LIKE '%%{}%%') LIMIT 20;".format(tag_name)).fetchall()
     conn.close()
+    print("recipe by tag")
+    recipe_list = []
+    for result in query_results:
+        item = {
+            "id": result[0],
+            "name": result[1],
+        }
+        recipe_list.append(item)
+
+    return recipe_list
+
+def fetch_recipe_by_time(time) -> list:
+    conn = db.connect()
+    #SELECT name FROM Recipe WHERE recipe_id IN (SELECT recipe_id from Tags WHERE tag_name LIKE “”
+    query_results = conn.execute("SELECT recipe_id, name FROM Recipe WHERE name LIKE '{} minute%%' LIMIT 20;".format(time)).fetchall()
+    conn.close()
+    print("recipe by time")
+    recipe_list = []
+    for result in query_results:
+        item = {
+            "id": result[0],
+            "name": result[1],
+        }
+        recipe_list.append(item)
+
+    return recipe_list
+
+def fetch_recipe_by_num_ingr(num_ingr) -> list:
+    conn = db.connect()
+    #SELECT name FROM Recipe WHERE recipe_id IN (SELECT recipe_id from Tags WHERE tag_name LIKE “”
+    query_results = conn.execute("SELECT recipe_id, name FROM Recipe WHERE name LIKE '{} ingredient%%' LIMIT 20;".format(num_ingr)).fetchall()
+    conn.close()
+    print("recipe by ingr")
+    recipe_list = []
+    for result in query_results:
+        item = {
+            "id": result[0],
+            "name": result[1],
+        }
+        recipe_list.append(item)
+
+    return recipe_list
 
 def remove_list_by_id(list_id: int) ->None:
     conn = db.connect()
@@ -286,17 +326,166 @@ def fetch_recipe_by_name(name) -> list:
 
     return recipe_list
 
-def add_user(user_id, username, name, email, password):
+def update_list_entry(old_name, new_name):
     conn = db.connect()
-    query = 'Insert Into User (id, username, name, email, password) VALUES ("{}", "{}", "{}", "{}", "{}");'.format(
-    user_id, username, name, email, password)
+    query = 'UPDATE PersonalizedList SET name = "{}" where name = "{}";'.format(new_name, old_name)
+    conn.execute(query)
+    conn.close()
+    return fetch_lists()
+
+def add_user(username, name, email, password):
+    conn = db.connect()
+    query = 'Insert Into User (username, name, email, password) VALUES ("{}", "{}", "{}", "{}");'.format(
+    username, name, email, password)
+    conn.execute(query)
+    conn.close()
+    return fetch_users()
+
+def delete_user(username):
+    conn = db.connect()
+    query = "DELETE FROM User WHERE username = '{}';".format(username)
+    conn.execute(query)
+    conn.close()
+    return fetch_users()
+
+def update_user_entry(old_name, new_name):
+    conn = db.connect()
+    query = 'UPDATE User SET username = "{}" where username = "{}";'.format(new_name, old_name)
+    conn.execute(query)
+    conn.close()
+    return fetch_users()
+
+def fetch_users():
+    conn = db.connect()
+    query_results = conn.execute("SELECT username FROM User;").fetchall()
+
+    conn.close()
+    list_name = []
+    for result in query_results:
+        item = {
+            "username": result[0]
+        }
+        list_name.append(item)
+
+    return list_name   
+
+def add_list_by_name(list_name):
+    conn = db.connect()
+    query = 'Insert Into PersonalizedList (name, list_type) VALUES ("{}", "{}");'.format(
+    list_name, int(0)) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+    return fetch_lists()
+
+def delete_list_by_name(list_name):
+    conn = db.connect()
+    query = "DELETE FROM PersonalizedList WHERE name LIKE '%%{}%%';".format(list_name) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+    return fetch_lists()
+
+def fetch_lists():
+    conn = db.connect()
+    query_results = conn.execute("SELECT name FROM PersonalizedList;").fetchall()
+
+    conn.close()
+    list_name = []
+    for result in query_results:
+        item = {
+            "name": result[0]
+        }
+        list_name.append(item)
+
+    return list_name
+
+def get_ingredient_name(ingredient_id):
+    conn = db.connect()
+    q1 = "SELECT ingredient_name FROM Ingredients WHERE ingredient_id = {};".format(ingredient_id)
+    res = conn.execute(q1)
+    for r in res:
+        return r[0]
+
+def add_ingredient_by_name(recipe_id, ingredient):
+    conn = db.connect()
+    q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
+    res = conn.execute(q1)
+    ing = 0
+    for r in res:
+        ing = r[0]
+    query = 'Insert Into RecipeHasIngredients (ingredient_id, recipe_id) VALUES ({}, {});'.format(
+    recipe_id, ing) #type 0 means recipe
     conn.execute(query)
     conn.close()
 
+def delete_ingredient(recipe_id, ingredient):
+    conn = db.connect()
+    q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
+    res = conn.execute(q1)
+    ing = 0
+    for r in res:
+        ing = r[0]
+    query = "DELETE FROM RecipeHasIngredients where recipe_id = {} and ingredient_id = {};".format(recipe_id, ing) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+    return fetch_lists()
 
+def update_ingredient(recipe_id, ingredient_old, ingredient_new):
+    conn = db.connect()
+    q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_old)
+    res = conn.execute(q1)
+    ing1 = 0
+    for r in res:
+        ing1 = r[0]
+    q2 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_new)
+    r2 = conn.execute(q2)
+    ing2 = 0
+    for r in r2:
+        ing2 = r[0]
+    query = 'UPDATE RecipeHasIngredients SET ingredient_id = {} where recipe_id = {} and ingredient_id = {};'.format(ing2, recipe_id, ing1)
+    conn.execute(query)
+    conn.close()
 # def update_user(user_id, username, name, email, password):
 
 
+def add_tag_by_name(recipe_id, tag_name):
+    conn = db.connect()
+    # q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
+    # res = conn.execute(q1)
+    # ing = 0
+    # for r in res:
+    #     ing = r[0]
+    query = 'Insert Into RecipeHasTags (recipe_id, tag_name) VALUES ({}, "{}");'.format(
+    recipe_id, tag_name) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+
+def delete_tag(recipe_id, tag_name):
+    conn = db.connect()
+    # q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
+    # res = conn.execute(q1)
+    # ing = 0
+    # for r in res:
+    #     ing = r[0]
+    query = "DELETE FROM RecipeHasTags where recipe_id = {} and tag_name = '{}';".format(recipe_id, tag_name) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+    return fetch_lists()
+
+def update_tag(recipe_id, tag_old, tag_new):
+    conn = db.connect()
+    # q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_old)
+    # res = conn.execute(q1)
+    # ing1 = 0
+    # for r in res:
+    #     ing1 = r[0]
+    # q2 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_new)
+    # r2 = conn.execute(q2)
+    # ing2 = 0
+    # for r in r2:
+    #     ing2 = r[0]
+    query = 'UPDATE RecipeHasTags SET tag_name = "{}" where recipe_id = {} and tag_name = "{}";'.format(tag_new, recipe_id, tag_old)
+    conn.execute(query)
+    conn.close()
 # def remove_user(user_id):
 
 
@@ -309,18 +498,22 @@ class User:
         self.password = password
 # from sqlalchemy.ext.declarative import declarative_base
 # from sqlalchemy import Column, Integer, String, Float, Text
-# class Recipe(other_db.Model):
-#     __tablename__ = "Recipe"
-#     id = Column(Integer, primary_key = True)
-#     minutes = Column(Integer)
-#     num_steps = Column(Integer)
-#     recipe_steps = Column(Text)
-#     contributor_id = Column(Integer)
-#     name = Column(String)
-#     sugar = Column(Float)
-#     sodium = Column(Float)
-#     protein = Column(Float)
-#     total_fat = Column(Float)
-#     saturated_fat = Column(Float)
-#     calories = Column(Float)
-#     carbs = Column(Text)
+class Recipe:
+    def __init__(self, id, minutes, num_steps, recipe_steps, contributor_id, name, sugar, sodium, protein, total_fat, saturated_fat, calories, carbs, ingredients):
+        self.id = id
+        self.minutes = minutes 
+        self.num_steps = num_steps
+        self.recipe_steps = recipe_steps 
+        self.contributor_id = contributor_id 
+        self.name = name 
+        self.sugar = sugar
+        self.sodium = sodium
+        self.protein = protein 
+        self.total_fat = total_fat
+        self.saturated_fat = saturated_fat 
+        self.calories = calories
+        self.carbs = carbs
+        self.ingredients = ingredients
+
+    def __str__(self): 
+        return "This is the recipe:\n {}, minutes:\n {}, number of steps:\n {}, recipe steps:\n {}, contributor id:\n {}, name:\n {}, sugar:\n {}, sodium:\n {}, protein:\n {}, total_fat:\n {}, saturated_fat:\n {}, calories:\n {}, carbs:\n {}, ingredient ids:\n {}".format(self.id, self.minutes, self.num_steps, self.recipe_steps, self.contributor_id, self.name, self.sugar, self.sodium, self.protein, self.total_fat, self.saturated_fat, self.calories, self.carbs, self.ingredients)
