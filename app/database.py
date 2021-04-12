@@ -405,7 +405,7 @@ def get_ingredient_name(ingredient_id):
     for r in res:
         return r[0]
 
-def add_ingredient_by_name(recipe_id, ingredient):
+def add_ingredient_by_name(recipe_id, ingredient):  #TODO: fix tnis
     conn = db.connect()
     q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
     res = conn.execute(q1)
