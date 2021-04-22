@@ -17,19 +17,19 @@ Login Page
         <form action="/tag_search", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
-            <input type="text" placeholder="Search for Recipes by Tag..." name="tag_entry" required >
+            <input type="text" placeholder="Search for Recipes by Tag..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
         <form action="/time_search", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
-            <input type="text" placeholder="Search for Recipes by Time..." name="time_entry" required >
+            <input type="text" placeholder="Search for Recipes by Time..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
         <form action="/num_ingr_search", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
-            <input type="text" placeholder="Search for Recipes by Number of Ingredients..." name="ingr_entry" required >
+            <input type="text" placeholder="Search for Recipes by Number of Ingredients..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
 
@@ -83,12 +83,11 @@ Login Page
         </form>
         <br>
         <br>
-        <b>Filter by: </b>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Lettuce</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/swathi'">Short</button>
+        <b>Filter by tag: </b>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Tomoko</button>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/swathi'">Swathi</button>
         <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/healthy'">Healthy</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/teresa'">Reviews</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/get_difficulty'">Difficulty</button>
+        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/teresa'">Teresa</button>
     </div>
     <div class="container table-responsive">          
         <table class="table table-hover">
@@ -96,6 +95,9 @@ Login Page
                 <tr>
                     <th class="recipe-id">#</th>
                     <th class="recipe">Recipe Name</th>
+                    <th class="recipe">Difficulty</th>
+                    <th class="recipe">Num Ingredients</th>
+                    <th class="recipe">Cook Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -104,6 +106,9 @@ Login Page
                     <!-- <th></th> -->
                         <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.id}}</td>
                         <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.name}}</td>
+                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.difficulty}}</td>
+                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.num_ingredients}}</td>
+                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.minutes}}</td>
                         
                 </tr>
                 {% endfor %} 

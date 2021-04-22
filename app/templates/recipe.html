@@ -3,11 +3,49 @@
 Login Page
 {% endblock %}
 
+<!-- self.id = id
+self.minutes = minutes 
+self.num_steps = num_steps
+self.recipe_steps = recipe_steps 
+self.contributor_id = contributor_id 
+self.name = name 
+self.sugar = sugar
+self.sodium = sodium
+self.protein = protein 
+self.total_fat = total_fat
+self.saturated_fat = saturated_fat 
+self.calories = calories
+self.carbs = carbs
+self.ingredients = ingredients
+self.tags = tags -->
+
 {% block content %}
 <br>
 <body>
     <div class="container" style="text-align: center;">
-        <p>{{recipe}}</p>
+        <h3 style="color:powderblue;">Recipe {{recipe.id}}: {{recipe.name}}</h3>
+        <p style="border:3px; border-style:solid; border-color:#977659; padding: 1em;"> 
+            Basic information:<br>
+            Minutes: {{recipe.minutes}}<br>
+            Number of steps: {{recipe.num_steps}}<br>
+            Contributor id: {{recipe.contributor_id}}<br>     
+        </p>
+        <p style="border:3px; border-style:solid; border-color:#ffa500; padding: 1em;"> 
+            Recipe Nutrition Information:<br>
+            Sugar: {{recipe.sugar}}<br>
+            Sodium: {{recipe.sodium}}<br>
+            Protein: {{recipe.protein}}<br>
+            Total Fat: {{recipe.total_fat}}<br>
+            Saturated Fat: {{recipe.saturated_fat}}<br>
+            Calories: {{recipe.calories}}<br>
+            Carbs: {{recipe.carbs}}<br>
+        </p>
+        <p style="border:3px; border-style:solid; border-color:#977659; padding: 1em;"> 
+            Recipe Steps:<br>
+            {% for step in recipe.recipe_steps %}
+                {{loop.index1}}. {{step}}<br>
+            {% endfor %}
+        </p>
     </div>
 </body>
 

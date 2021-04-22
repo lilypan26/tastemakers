@@ -112,6 +112,13 @@ def listDelete():
         items = db_helper.delete_list_by_name(data)
         return render_template("personal_lists.html", items=items)
     return render_template("personal_lists.html")
+############################################# Stored Procedure ###############################################
+ 
+@app.route("/recipesearch/get_difficulty", methods=["POST", "GET"])
+def get_difficulty():
+    difficulty_results = db_helper.fetch_difficulty()
+    return render_template("difficulty.html", items=difficulty_results)  
+##################################################################################################################
 
 #Delete ingredient_name FROM Recipes WHERE ingredient_name IN (SELECT ingredient_name 
 # FROM RecipeHasIngredients )
@@ -127,6 +134,7 @@ def ingredient_add():
         db_helper.add_ingredient_by_name(recipe_id, ingredient)
         return render_template("recipe_search.html")
     return render_template("recipe_search.html")  
+
 
 @app.route("/recipesearch/delete_ingredient", methods=["POST", "GET"])
 def ingredient_remove():
@@ -364,61 +372,61 @@ def healthyRecipes():
     healthy_results = db_helper.fetch_healthy()
     return render_template("recipe_search.html", items=healthy_results)
 
-@app.route("/tag_search", methods = ['GET', 'POST'])
+@app.route("/recipesearch/tag_search", methods = ['GET', 'POST'])
 def tag_search():
     print(request.method)
     if request.method == 'POST':
         #print(request.form['search_entry'])
         default = 'empty'
-        data = request.form.get('search_entry', default)
+        data = request.form.get('tag_entry', default)
         print(data)
         if data == "" or data == default:
             return render_template("recipe_search.html")
         items = db_helper.fetch_recipe_by_tag(data)
         return render_template("recipe_search.html", items=items)
-    return render_template("login.html", items=[])
+    return render_template("recipe_search.html", items=[])
 
-@app.route("/time_search", methods = ['GET', 'POST'])
+@app.route("/recipesearch/time_search", methods = ['GET', 'POST'])
 def time_search():
     print(request.method)
     if request.method == 'POST':
         #print(request.form['search_entry'])
         default = 'empty'
-        data = request.form.get('search_entry', default)
+        data = request.form.get('time_entry', default)
         print(data)
         if data == "" or data == default:
             return render_template("recipe_search.html")
         items = db_helper.fetch_recipe_by_time(data)
         return render_template("recipe_search.html", items=items)
-    return render_template("login.html", items=[])
+    return render_template("recipe_search.html", items=[])
 
-@app.route("/ingredient_search", methods = ['GET', 'POST'])
-def ingredient_search():
-    print(request.method)
-    if request.method == 'POST':
-        #print(request.form['search_entry'])
-        default = 'empty'
-        data = request.form.get('search_entry', default)
-        print(data)
-        if data == "" or data == default:
-            return render_template("recipe_search.html")
-        items = db_helper.fetch_recipe_by_name(data)
-        return render_template("recipe_search.html", items=items)
-    return render_template("login.html", items=[])
+# @app.route("/recipesearch/ingredient_search", methods = ['GET', 'POST'])
+# def ingredient_search():
+#     print(request.method)
+#     if request.method == 'POST':
+#         #print(request.form['search_entry'])
+#         default = 'empty'
+#         data = request.form.get('search_entry', default)
+#         print(data)
+#         if data == "" or data == default:
+#             return render_template("recipe_search.html")
+#         items = db_helper.fetch_recipe_by_name(data)
+#         return render_template("recipe_search.html", items=items)
+#     return render_template("recipe_search.html", items=[])
     
-@app.route("/num_ingr_search", methods = ['GET', 'POST'])
+@app.route("/recipesearch/num_ingr_search", methods = ['GET', 'POST'])
 def num_ingr_search():
     print(request.method)
     if request.method == 'POST':
         #print(request.form['search_entry'])
         default = 'empty'
-        data = request.form.get('search_entry', default)
+        data = request.form.get('ingr_entry', default)
         print(data)
         if data == "" or data == default:
             return render_template("recipe_search.html")
         items = db_helper.fetch_recipe_by_num_ingr(data)
         return render_template("recipe_search.html", items=items)
-    return render_template("login.html", items=[])
+    return render_template("recipe_search.html", items=[])
     
 @app.route('/recipesearch/<id>')
 def get_recipe(id):

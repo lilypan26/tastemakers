@@ -1,7 +1,32 @@
 """Defines all the functions related to the database"""
-from app import db
+from app import db, min_ingredient_id
 from sqlalchemy.sql import func
+from sqlalchemy import DDL, event
+from sqlalchemy.ext.compiler import compiles
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import text
+
+# from app import other_db
 # from flask_sqlalchemy import SQLAlchemy
+def fetch_difficulty() -> list:
+    conn = db.connect()
+    query_results = conn.execute(text("CALL Result()")).fetchall()
+    
+    #print(query_results)
+    conn.close()
+    recipe_list = []
+    for result in query_results[:15]:
+        item = {
+            "id": result[0],
+            "name": result[1],
+            "difficulty" : result[2],
+            "num_ingredients" : results[3],
+            "minutes" : results[4]
+            # "status": result[2]
+        }
+        recipe_list.append(item)
+    #print(recipe_list)
+    return recipe_list
 
 def fetch_tastemaker() -> list:
     """Reads all tasks listed in the todo table
@@ -27,7 +52,7 @@ def fetch_tastemaker() -> list:
 
 def fetch_swathi() -> list:
     conn = db.connect()
-    query_results = conn.execute("(SELECT r.name, COUNT(ingredient_id) as num_ingredients " +
+    query_results = conn.execute("(SELECT r.recipe_id, r.name, COUNT(ingredient_id) as num_ingredients " +
                                 "FROM RecipeHasIngredients rhi natural join Recipe r " +
                                 "WHERE r.name LIKE '5 minute%%' AND rhi.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING avg(rating) > 3) " +
                                 "GROUP BY r.name " +
@@ -39,8 +64,8 @@ def fetch_swathi() -> list:
     for result in query_results:
         #print("result: " + result)
         item = {
-            "id": result[1],
-            "name": result[0]
+            "id": result[0],
+            "name": result[1]
         }
         # print("result 0: " + str(result[0]))
         # print("result 1: " + str(result[1]))
@@ -58,13 +83,24 @@ def fetch_recipe(id) -> list:
     conn = db.connect()
     query_results = conn.execute("Select * from Recipe  r WHERE r.recipe_id = %s;", recipe_id).fetchall()
     ing_res = conn.execute("Select ingredient_id FROM RecipeHasIngredients WHERE recipe_id = {}".format(recipe_id)).fetchall()
+    tag_res = conn.execute("Select tag_name FROM RecipeHasTags WHERE recipe_id = {}".format(recipe_id)).fetchall()
     conn.close()
     ingredients = []
     for i in ing_res:
         ingredients.append(get_ingredient_name(i[0]))
+    
+    tags = []
+    for t in tag_res:
+        tags.append(t[0])
+     
     recipe = None
     for result in query_results:
-        recipe =  Recipe(result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], ingredients)
+    # parse json formatted list
+        steps = []
+        stepstring = result[3][1:len(result[3]) - 2]
+        for step in stepstring.split(", "):
+            steps.append(step.capitalize())
+        recipe =  Recipe(result[0], result[1], result[2], steps, result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], ingredients, tags)
 
     # print(recipe_list)
     return recipe
@@ -399,21 +435,32 @@ def fetch_lists():
     return list_name
 
 def get_ingredient_name(ingredient_id):
+    ret = None
     conn = db.connect()
     q1 = "SELECT ingredient_name FROM Ingredients WHERE ingredient_id = {};".format(ingredient_id)
     res = conn.execute(q1)
     for r in res:
-        return r[0]
+        ret = r[0]
+        return ret
+    return ret
 
 def add_ingredient_by_name(recipe_id, ingredient):  #TODO: fix tnis
+    global min_ingredient_id
     conn = db.connect()
     q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
     res = conn.execute(q1)
     ing = 0
     for r in res:
         ing = r[0]
+    # print(ing)
+    
+    if ing == 0:
+        conn.execute("INSERT INTO Ingredients (ingredient_id, ingredient_name) VALUES ({}, '{}');".format(min_ingredient_id, ingredient))
+        ing = min_ingredient_id
+        min_ingredient_id -= 1
+    
     query = 'Insert Into RecipeHasIngredients (ingredient_id, recipe_id) VALUES ({}, {});'.format(
-    recipe_id, ing) #type 0 means recipe
+    ing, recipe_id) #type 0 means recipe
     conn.execute(query)
     conn.close()
 
@@ -430,17 +477,25 @@ def delete_ingredient(recipe_id, ingredient):
     return fetch_lists()
 
 def update_ingredient(recipe_id, ingredient_old, ingredient_new):
+    global min_ingredient_id
     conn = db.connect()
     q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_old)
     res = conn.execute(q1)
     ing1 = 0
     for r in res:
         ing1 = r[0]
+    if ing1 == 0:
+        return
     q2 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_new)
     r2 = conn.execute(q2)
     ing2 = 0
     for r in r2:
         ing2 = r[0]
+    
+    if ing2 == 0:
+        conn.execute("INSERT INTO Ingredients (ingredient_id, ingredient_name) VALUES ({}, '{}');".format(min_ingredient_id, ingredient_new))
+        min_ingredient_id -= 1
+    
     query = 'UPDATE RecipeHasIngredients SET ingredient_id = {} where recipe_id = {} and ingredient_id = {};'.format(ing2, recipe_id, ing1)
     conn.execute(query)
     conn.close()
@@ -454,9 +509,10 @@ def add_tag_by_name(recipe_id, tag_name):
     # ing = 0
     # for r in res:
     #     ing = r[0]
-    query = 'Insert Into RecipeHasTags (recipe_id, tag_name) VALUES ({}, "{}");'.format(
-    recipe_id, tag_name) #type 0 means recipe
-    conn.execute(query)
+    conn.execute(RecipeHasTags.__table__.insert().values(recipe_id=recipe_id, tag_name=tag_name))
+    # query = 'Insert Into RecipeHasTags (recipe_id, tag_name) VALUES ({}, "{}");'.format(
+    # recipe_id, tag_name) #type 0 means recipe
+    # conn.execute(query)
     conn.close()
 
 def delete_tag(recipe_id, tag_name):
@@ -483,6 +539,8 @@ def update_tag(recipe_id, tag_old, tag_new):
     # ing2 = 0
     # for r in r2:
     #     ing2 = r[0]
+    # conn.execute(RecipeHasTags.__table__.update().values(recipe_id=recipe_id, tag_name=tag_name))
+
     query = 'UPDATE RecipeHasTags SET tag_name = "{}" where recipe_id = {} and tag_name = "{}";'.format(tag_new, recipe_id, tag_old)
     conn.execute(query)
     conn.close()
@@ -496,10 +554,9 @@ class User:
         self.name = name
         self.email = email
         self.password = password
-# from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy import Column, Integer, String, Float, Text
+
 class Recipe:
-    def __init__(self, id, minutes, num_steps, recipe_steps, contributor_id, name, sugar, sodium, protein, total_fat, saturated_fat, calories, carbs, ingredients):
+    def __init__(self, id, minutes, num_steps, recipe_steps, contributor_id, name, sugar, sodium, protein, total_fat, saturated_fat, calories, carbs, ingredients, tags):
         self.id = id
         self.minutes = minutes 
         self.num_steps = num_steps
@@ -514,6 +571,47 @@ class Recipe:
         self.calories = calories
         self.carbs = carbs
         self.ingredients = ingredients
+        self.tags = tags
 
     def __str__(self): 
-        return "This is the recipe:\n {}, minutes:\n {}, number of steps:\n {}, recipe steps:\n {}, contributor id:\n {}, name:\n {}, sugar:\n {}, sodium:\n {}, protein:\n {}, total_fat:\n {}, saturated_fat:\n {}, calories:\n {}, carbs:\n {}, ingredient ids:\n {}".format(self.id, self.minutes, self.num_steps, self.recipe_steps, self.contributor_id, self.name, self.sugar, self.sodium, self.protein, self.total_fat, self.saturated_fat, self.calories, self.carbs, self.ingredients)
+        return "This is the recipe: {},\n minutes: {},\n number of steps: {},\n recipe steps: {},\n contributor id:\n {}, name:\n {}, sugar:\n {}, sodium:\n {}, protein:\n {}, total_fat:\n {}, saturated_fat:\n {}, calories:\n {}, carbs:\n {}, ingredients:\n {}, tags:\n {}".format(self.id, self.minutes, self.num_steps, self.recipe_steps, self.contributor_id, self.name, self.sugar, self.sodium, self.protein, self.total_fat, self.saturated_fat, self.calories, self.carbs, self.ingredients, self.tags)
+
+
+
+
+# other_db = SQLAlchemy()
+
+# # tsvector type declaration
+# class tsvector(types.TypeDecorator):
+#     impl = types.UnicodeText
+
+# @compiles(tsvector, 'postgresql')
+# def compile_tsvector(element, compiler, **kw):
+#     return 'tsvector'
+
+# table declaration
+# from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+from app import base
+
+class RecipeHasTags(base):
+    __tablename__ = "RecipeHasTags"
+    recipe_id = Column(Integer, primary_key=True)
+    tag_name = Column(String, primary_key=True)
+
+# custom trigger DDL
+rht_insert_trig = DDL('''\
+    CREATE TRIGGER TagTrig BEFORE INSERT OR UPDATE
+    ON RecipeHasTags
+    FOR EACH ROW 
+        BEGIN
+            SET @name = (SELECT tag_name FROM Tags
+                                WHERE tag_name = new.tag_name)
+            IF @name IS NULL THEN
+                INSERT INTO Tags(tag_name)
+                VALUES(new.tag_name)
+        END;
+    ''')
+
+# # event listener to trigger on data insert to MyTable
+event.listen(RecipeHasTags, 'before_insert', rht_insert_trig)
