@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+Loading Squirrel
+{% endblock %}
+
+{% block content %}
+<!-- <script type="text/javascript">
+  function submit()
+  {
+      document.getElementById("startrunning").click(); // Simulates button click
+      document.submitForm.submit(); // Submits the form without the button
+  }
+</script> -->
+<script>
+window.onload = function(){
+  document.getElementById('startrunning').click();
+}
+</script>
+
+<button id="startrunning" type="submit" onclick="window.location.href='{{redir}}'">Chef squirrel is scurrying to find your recipes!</button>
+
+<head>
+    <style>
+    h3 {text-align: center;}
+    
+    @keyframes animatedBackground {
+        from { background-position: 0 0; }
+        to { background-position: 100% 0; }
+    }
+
+
+    #animate-area { 
+        width: 100%; 
+        height: 400px; 
+        background-image: url(../static/img/apple-touch-icon.png);
+        background-position: 0px 0px;
+        background-repeat: repeat-x;
+
+        animation: animatedBackground 20s linear infinite;
+  }
+    </style>
+    <div id="animate-area"></div>
+</head>
+{% endblock %}
