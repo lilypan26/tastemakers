@@ -10,7 +10,7 @@ from sqlalchemy import text
 # from flask_sqlalchemy import SQLAlchemy
 def fetch_difficulty() -> list:
     conn = db.connect()
-    query_results = conn.execute(text("CALL Result()")).fetchall()
+    query_results = conn.execute(text("CALL Result(:param)"), param='difficulty').fetchall()
     
     #print(query_results)
     conn.close()
@@ -52,16 +52,19 @@ def fetch_tastemaker() -> list:
 
 def fetch_swathi() -> list:
     conn = db.connect()
-    query_results = conn.execute("(SELECT r.recipe_id, r.name, COUNT(ingredient_id) as num_ingredients " +
-                                "FROM RecipeHasIngredients rhi natural join Recipe r " +
-                                "WHERE r.name LIKE '5 minute%%' AND rhi.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING avg(rating) > 3) " +
-                                "GROUP BY r.name " +
-                                "HAVING num_ingredients < 8 " +
-                                "ORDER BY num_ingredients ASC, r.name ASC) LIMIT 15;").fetchall()
+
+    query_results = conn.execute(text("CALL Result(:param)"), param='swathi').fetchall()
+    
+    # query_results = conn.execute("(SELECT r.recipe_id, r.name, COUNT(ingredient_id) as num_ingredients " +
+    #                             "FROM RecipeHasIngredients rhi natural join Recipe r " +
+    #                             "WHERE r.name LIKE '5 minute%%' AND rhi.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING avg(rating) > 3) " +
+    #                             "GROUP BY r.name " +
+    #                             "HAVING num_ingredients < 8 " +
+    #                             "ORDER BY num_ingredients ASC, r.name ASC) LIMIT 15;").fetchall()
     #print("query results: " + query_results)
     conn.close()
     recipes = []
-    for result in query_results:
+    for result in query_results[:15]:
         #print("result: " + result)
         item = {
             "id": result[0],
@@ -113,18 +116,20 @@ def fetch_healthy() -> list:
     """
 
     conn = db.connect()
-    query_results = conn.execute("(SELECT r.recipe_id, r.name, r.calories as Calories " +
-                                "FROM Recipe r JOIN RecipeHasTags rt ON r.recipe_id = rt.recipe_id " + 
-                                "WHERE rt.tag_name = 'healthy' OR rt.tag_name = 'very-low-carbs' AND r.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING COUNT(rating) > 4) " +
-                                "GROUP BY r.recipe_id) " + 
-                                "UNION " + 
-                                "(SELECT r.recipe_id, r.name, r.calories as Calories " +
-                                "FROM Recipe r JOIN RecipeHasTags rt ON r.recipe_id = rt.recipe_id " +
-                                "WHERE r.sugar < 50 AND rt.tag_name = 'desserts' AND r.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING AVG(rating) > 2)) LIMIT 15;").fetchall()
+    query_results = conn.execute(text("CALL Result(:param)"), param='healthy').fetchall()
+    
+    # query_results = conn.execute("(SELECT r.recipe_id, r.name, r.calories as Calories " +
+    #                             "FROM Recipe r JOIN RecipeHasTags rt ON r.recipe_id = rt.recipe_id " + 
+    #                             "WHERE rt.tag_name = 'healthy' OR rt.tag_name = 'very-low-carbs' AND r.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING COUNT(rating) > 4) " +
+    #                             "GROUP BY r.recipe_id) " + 
+    #                             "UNION " + 
+    #                             "(SELECT r.recipe_id, r.name, r.calories as Calories " +
+    #                             "FROM Recipe r JOIN RecipeHasTags rt ON r.recipe_id = rt.recipe_id " +
+    #                             "WHERE r.sugar < 50 AND rt.tag_name = 'desserts' AND r.recipe_id IN (SELECT recipe_id FROM Review GROUP BY recipe_id HAVING AVG(rating) > 2)) LIMIT 15;").fetchall()
     #print(query_results)
     conn.close()
     recipe_list = []
-    for result in query_results:
+    for result in query_results[:15]:
         item = {
             "id": result[0],
             "name": result[1],
