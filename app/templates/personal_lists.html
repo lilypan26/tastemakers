@@ -36,6 +36,7 @@ Personal Lists
                 <thead>
                     <tr>
                         <!-- <th class="recipe-id">#</th> -->
+                        <th class="list id">List ID</th>
                         <th class="list name">List Name</th>
                     </tr>
                 </thead>
@@ -45,7 +46,8 @@ Personal Lists
                         <!-- <th></th> -->
                             <!-- <td>{{item.id}}</td> -->
                             <!-- <a href="/recipesearch/{{item.id}}" class="stretched-link"></a> -->
-                            <td>{{item.name}}</td>
+                            <td><a href="/view_lists/{{item.list_id}}" class="stretched-link"></a>{{item.list_id}}</td>
+                            <td><a href="/view_lists/{{item.list_id}}" class="stretched-link"></a>{{item.name}}</td>
                     </tr>
                     {% endfor %} 
                 </tbody>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Login Page
+Recipe Searc Page
 {% endblock %}
 
 {% block content %}
@@ -84,11 +84,26 @@ Login Page
         <br>
         <br>
         <b>Filter by: </b>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Lettuce</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/swathi'">Short</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/healthy'">Healthy</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/teresa'">Reviews</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/get_difficulty'">Difficulty</button>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="a" name="url" value="/recipesearch/tomoko">
+            <button type="submit" class="btn btn-outline-info btn-sm">Lettuce</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="b" name="url" value="/recipesearch/swathi">
+            <button type="submit" class="btn btn-outline-info btn-sm">Short</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="c" name="url" value="/recipesearch/healthy">
+            <button type="submit" class="btn btn-outline-info btn-sm">Healthy</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="d" name="url" value="/recipesearch/teresa">
+            <button type="submit" class="btn btn-outline-info btn-sm">Reviews</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="e" name="url" value="/recipesearch/get_difficulty">
+            <button type="submit" class="btn btn-outline-info btn-sm">Difficulty</button>
+        </form>
     </div>
     <div class="container table-responsive">          
         <table class="table table-hover">

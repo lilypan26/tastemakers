@@ -5,7 +5,7 @@ from sqlalchemy import DDL, event
 from sqlalchemy.ext.compiler import compiles
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
-
+from ast import literal_eval
 # from app import other_db
 # from flask_sqlalchemy import SQLAlchemy
 def fetch_difficulty() -> list:
@@ -19,9 +19,7 @@ def fetch_difficulty() -> list:
         item = {
             "id": result[0],
             "name": result[1],
-            "difficulty" : result[2],
-            "num_ingredients" : results[3],
-            "minutes" : results[4]
+            "difficulty" : result[2]
             # "status": result[2]
         }
         recipe_list.append(item)
@@ -98,11 +96,8 @@ def fetch_recipe(id) -> list:
      
     recipe = None
     for result in query_results:
-    # parse json formatted list
-        steps = []
-        stepstring = result[3][1:len(result[3]) - 2]
-        for step in stepstring.split(", "):
-            steps.append(step.capitalize())
+        # parse json formatted list
+        steps = literal_eval(result[3])
         recipe =  Recipe(result[0], result[1], result[2], steps, result[4], result[5], result[6], result[7], result[8], result[9], result[10], result[11], result[12], ingredients, tags)
 
     # print(recipe_list)
@@ -427,13 +422,14 @@ def delete_list_by_name(list_name):
 
 def fetch_lists():
     conn = db.connect()
-    query_results = conn.execute("SELECT name FROM PersonalizedList;").fetchall()
+    query_results = conn.execute("SELECT list_id, name FROM PersonalizedList;").fetchall()
 
     conn.close()
     list_name = []
     for result in query_results:
         item = {
-            "name": result[0]
+            "list_id": result[0],
+            "name": result[1]
         }
         list_name.append(item)
 

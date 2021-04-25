@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Login Page
+Difficulty Page
 {% endblock %}
 
 {% block content %}
@@ -9,74 +9,54 @@ Login Page
 <div class="container">
     <div style="text-align: center;">
         <form action="/recipesearch", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Name..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
         <form action="/tag_search", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Tag..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
         <form action="/time_search", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Time..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
         <form action="/num_ingr_search", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Number of Ingredients..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
 
 
-        INGREDIENT STUFF
+        INGREDIENTS
         <form action="/recipesearch/add_ingredient", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Recipe ID" name="recipe_id" required >
             <input type="text" placeholder="Ingredient ID" name="ingredient" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Add</button>
         </form>
         <form action="/recipesearch/update_ingredient", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Recipe ID" name="recipe_id" required >
             <input type="text" placeholder="Ingredient name to change..." name="ingredient_old" required >
             <input type="text" placeholder="Ingredient name new.." name="ingredient_new" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Update</button>
         </form>
         <form action="/recipesearch/delete_ingredient", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Recipe ID" name="recipe_id" required >
             <input type="text" placeholder="Ingredient name to delete..." name="ingredient" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Delete</button>
         </form>
 
-        TAG STUFF
+        TAGS
         <form action="/recipesearch/add_tag", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Recipe ID" name="recipe_id" required >
             <input type="text" placeholder="Tag Name" name="tag" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Add</button>
         </form>
         <form action="/recipesearch/update_tag", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Recipe ID" name="recipe_id" required >
             <input type="text" placeholder="Old Tag Name..." name="tag_old" required >
             <input type="text" placeholder="New Tag Name.." name="tag_new" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Update</button>
         </form>
         <form action="/recipesearch/delete_tag", method="POST">
-            <!-- action="/action_page.php" onsubmit="return myFunction()" -->
-            <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Recipe ID" name="recipe_id" required >
             <input type="text" placeholder="Tag to delete..." name="tag" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Delete</button>
@@ -84,10 +64,26 @@ Login Page
         <br>
         <br>
         <b>Filter by tag: </b>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/tomoko'">Tomoko</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/swathi'">Swathi</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/healthy'">Healthy</button>
-        <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/recipesearch/teresa'">Teresa</button>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="a" name="url" value="/recipesearch/tomoko">
+            <button type="submit" class="btn btn-outline-info btn-sm">Lettuce</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="b" name="url" value="/recipesearch/swathi">
+            <button type="submit" class="btn btn-outline-info btn-sm">Short</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="c" name="url" value="/recipesearch/healthy">
+            <button type="submit" class="btn btn-outline-info btn-sm">Healthy</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="d" name="url" value="/recipesearch/teresa">
+            <button type="submit" class="btn btn-outline-info btn-sm">Reviews</button>
+        </form>
+        <form action="/redirect", method="POST">
+            <input type="hidden" id="e" name="url" value="/recipesearch/get_difficulty">
+            <button type="submit" class="btn btn-outline-info btn-sm">Difficulty</button>
+        </form>
     </div>
     <div class="container table-responsive">          
         <table class="table table-hover">
@@ -96,8 +92,6 @@ Login Page
                     <th class="recipe-id">#</th>
                     <th class="recipe">Recipe Name</th>
                     <th class="recipe">Difficulty</th>
-                    <th class="recipe">Num Ingredients</th>
-                    <th class="recipe">Cook Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -107,37 +101,12 @@ Login Page
                         <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.id}}</td>
                         <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.name}}</td>
                         <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.difficulty}}</td>
-                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.num_ingredients}}</td>
-                        <td><a href="/recipesearch/{{item.id}}" class="stretched-link"></a>{{item.minutes}}</td>
                         
                 </tr>
                 {% endfor %} 
             </tbody>
         </table>
     </div>
-    <!-- <script>
-        function CreateTableFromJSON() {
-            // EXTRACT column names FOR HTML HEADER. 
-            var col = [];
-            for (var i = 0; i < myBooks.length; i++) {
-                for (var key in myBooks[i]) {
-                    if (col.indexOf(key) === -1) {
-                        col.push(key);
-                    }
-                }
-            }
-        }
-    </script> -->
-    <!-- <button type="submit" class="btn btn-outline-info btn-sm" onclick="teresa()">Teresa</button>
-    <button type="submit" class="btn btn-outline-info btn-sm" onclick="swathi()">Swathi</button>
-    <button type="submit" class="btn btn-outline-info btn-sm" onclick="lily()">Lily</button> -->
-<!-- </div>
-    <div class="relative" style="text-align: center;">
-        <p>
-            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/grocery'">Search Recipes</button>
-            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/grocery'">My Lists</button>
-            <button type="submit" class="btn btn-outline-info btn-sm" onclick="window.location.href='/grocery'">Account</button>
-        </p> -->
     </div>
 </body>
 {% endblock %}

@@ -80,6 +80,11 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
 }
 
+/* Custom cursor image */
+.module {
+  cursor: url('../img/apple-touch-icon.png'), pointer;	
+}
+
 /* Set a style for all buttons */
 button {
   background-color: #ff6347;
@@ -88,6 +93,7 @@ button {
   margin: 8px 0;
   border: none;
   cursor: pointer;
+  /*cursor: url('../img/apple-touch-icon.png'), auto;*/
   width: 100%;
 }
 

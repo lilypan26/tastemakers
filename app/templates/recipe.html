@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Login Page
+Recipe Page
 {% endblock %}
 
 <!-- self.id = id
@@ -41,9 +41,21 @@ self.tags = tags -->
             Carbs: {{recipe.carbs}}<br>
         </p>
         <p style="border:3px; border-style:solid; border-color:#977659; padding: 1em;"> 
+            Recipe Ingredients:<br>
+            {% for ing in recipe.ingredients %}
+                {{loop.index0}}. {{ing}}<br>
+            {% endfor %}
+        </p>
+        <p style="border:3px; border-style:solid; border-color:#ffa500; padding: 1em;"> 
             Recipe Steps:<br>
             {% for step in recipe.recipe_steps %}
-                {{loop.index1}}. {{step}}<br>
+                {{loop.index0}}. {{step}}<br>
+            {% endfor %}
+        </p>
+        <p style="border:3px; border-style:solid; border-color:#977659; padding: 1em;"> 
+            Recipe Tags:<br>
+            {% for tag in recipe.tags %}
+                {{tag}}, 
             {% endfor %}
         </p>
     </div>
