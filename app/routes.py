@@ -209,6 +209,7 @@ def delete_user():
 
 @app.route("/recipesearch", methods=["POST", "GET"])
 def recipeSearch():
+    print("in recipe search")
     if request.method == 'POST':
         #print(request.form['search_entry'])
         default = 'empty'
@@ -216,9 +217,9 @@ def recipeSearch():
         print(data)
         if data == "" or data == default:
             return render_template("recipe_search.html")
-        items = db_helper.fetch_recipe_by_name(data)
+        items = db_helper.fetch_recipe_by_name(data, items=[])
         return render_template("recipe_search.html", items=items)
-    return render_template("recipe_search.html")
+    return render_template("recipe_search.html", items=[])
 
 @app.route("/recipesearch/tomoko")
 def recipeSearchResults():
