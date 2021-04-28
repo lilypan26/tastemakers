@@ -6,8 +6,9 @@ from flask import Flask
 from yaml import load, Loader
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
+from app.settings import save_min_ingredient_id, init_min_ing_id
 import atexit
+
 
 def init_connection_engine():
     """ initialize database setup
@@ -50,22 +51,7 @@ db = init_connection_engine()
 sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db)
 base = declarative_base()
 
-min_ingredient_id = -1
-with open('app\secret_file.txt', 'r') as f:
-  for line in f:
-    min_ingredient_id = int(line)
-    print(min_ingredient_id)
-# print(type(db))
-
-#defining function to run on shutdown
-def save_min_ingredient_id():
-    global min_ingredient_id
-    print(min_ingredient_id)
-    f = open('app\secret_file.txt', 'w')
-    f.write(str(min_ingredient_id))
-    f.close()
-    # print("finihsed writing secret")
-#Register the function to be called on exit
+init_min_ing_id()
 atexit.register(save_min_ingredient_id)
 
 # To prevent from using a blueprint, we use a cyclic import

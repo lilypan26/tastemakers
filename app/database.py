@@ -1,5 +1,6 @@
 """Defines all the functions related to the database"""
-from app import db, min_ingredient_id
+from app import db
+from app import settings
 from sqlalchemy.sql import func
 from sqlalchemy import DDL, event
 from sqlalchemy.ext.compiler import compiles
@@ -446,7 +447,7 @@ def get_ingredient_name(ingredient_id):
     return ret
 
 def add_ingredient_by_name(recipe_id, ingredient):  #TODO: fix tnis
-    global min_ingredient_id
+    # global settings.min_ingredient_id
     conn = db.connect()
     q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient)
     res = conn.execute(q1)
@@ -456,9 +457,10 @@ def add_ingredient_by_name(recipe_id, ingredient):  #TODO: fix tnis
     # print(ing)
     
     if ing == 0:
-        conn.execute("INSERT INTO Ingredients (ingredient_id, ingredient_name) VALUES ({}, '{}');".format(min_ingredient_id, ingredient))
-        ing = min_ingredient_id
-        min_ingredient_id -= 1
+        conn.execute("INSERT INTO Ingredients (ingredient_id, ingredient_name) VALUES ({}, '{}');".format(settings.min_ingredient_id, ingredient))
+        ing = settings.min_ingredient_id
+        settings.min_ingredient_id -= 1
+        print(settings.min_ingredient_id)
     
     query = 'Insert Into RecipeHasIngredients (ingredient_id, recipe_id) VALUES ({}, {});'.format(
     ing, recipe_id) #type 0 means recipe
@@ -478,7 +480,7 @@ def delete_ingredient(recipe_id, ingredient):
     return fetch_lists()
 
 def update_ingredient(recipe_id, ingredient_old, ingredient_new):
-    global min_ingredient_id
+    # global min_ingredient_id
     conn = db.connect()
     q1 = "SELECT ingredient_id FROM Ingredients WHERE ingredient_name = '{}';".format(ingredient_old)
     res = conn.execute(q1)
@@ -494,8 +496,8 @@ def update_ingredient(recipe_id, ingredient_old, ingredient_new):
         ing2 = r[0]
     
     if ing2 == 0:
-        conn.execute("INSERT INTO Ingredients (ingredient_id, ingredient_name) VALUES ({}, '{}');".format(min_ingredient_id, ingredient_new))
-        min_ingredient_id -= 1
+        conn.execute("INSERT INTO Ingredients (ingredient_id, ingredient_name) VALUES ({}, '{}');".format(settings.min_ingredient_id, ingredient_new))
+        settings.min_ingredient_id -= 1
     
     query = 'UPDATE RecipeHasIngredients SET ingredient_id = {} where recipe_id = {} and ingredient_id = {};'.format(ing2, recipe_id, ing1)
     conn.execute(query)
