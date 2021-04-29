@@ -14,19 +14,19 @@ Recipe Search Page
             <input type="text" placeholder="Search for Recipes by Name..." name="search_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
-        <form action="/tag_search", method="POST">
+        <form action="/recipesearch/tag_search", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Tag..." name="tag_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
-        <form action="/time_search", method="POST">
+        <form action="/recipesearch/time_search", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Time..." name="time_entry" required >
             <button type="submit" class="btn btn-outline-info btn-sm">Search</button>
         </form>
-        <form action="/num_ingr_search", method="POST">
+        <form action="/recipesearch/num_ingr_search", method="POST">
             <!-- action="/action_page.php" onsubmit="return myFunction()" -->
             <!-- <label for="search_entry"><b></b></label> -->
             <input type="text" placeholder="Search for Recipes by Number of Ingredients..." name="ingr_entry" required >
