@@ -580,6 +580,21 @@ def fetch_list_recipes(id):
 
     return list_name
 
+def fetch_list_name_from_id(id):
+    conn = db.connect()
+    query = "SELECT name FROM PersonalizedList WHERE list_id = {};".format(id)
+    query_results = conn.execute(query).fetchall()
+    print(query_results)
+    conn.close()
+    # list_name = []
+    # for result in query_results:
+    #     item = {
+    #         "name":result[0]
+    #     }
+    #     list_name.append(item)
+
+    return query_results[0][0]
+
 
 class User:
     def __init__(self, user_id, username, name, email, password):
