@@ -61,7 +61,31 @@ def listDelete():
 @app.route('/view_lists/<id>')
 def get_list_recipes(id):
     recipe_info = db_helper.fetch_list_recipes(id)
-    return render_template("recipe.html", recipe=recipe_info)
+    return render_template("recipe_list.html", items=recipe_info, id=id)
+
+@app.route('/view_lists/<id>/add', methods=["POST", "GET"])
+def add_list_recipes(id):
+    if request.method == 'POST':
+        #print(request.form['search_entry'])
+        default = 'empty'
+        recipe_id = request.form.get('recipe_id', default)
+        if recipe_id == "" or recipe_id == default:
+            return render_template("recipe_list.html",id=id)
+        items = db_helper.add_recipe_by_id(id, recipe_id)
+        return render_template("recipe_list.html", items=items, id=id)
+    return render_template("recipe_list.html", id=id)  
+
+@app.route('/view_lists/<id>/delete', methods=["POST", "GET"])
+def delete_list_recipes(id):
+    if request.method == 'POST':
+        #print(request.form['search_entry'])
+        default = 'empty'
+        recipe_id = request.form.get('recipe_id', default)
+        if recipe_id == "" or recipe_id == default:
+            return render_template("recipe_list.html",id=id)
+        items = db_helper.delete_recipe_by_id(id, recipe_id)
+        return render_template("recipe_list.html", items=items, id=id)
+    return render_template("recipe_list.html", id=id)  
 ############################################# Stored Procedure ###############################################
  
 @app.route("/recipesearch/get_difficulty", methods=["POST", "GET"])
@@ -217,7 +241,7 @@ def recipeSearch():
         print(data)
         if data == "" or data == default:
             return render_template("recipe_search.html")
-        items = db_helper.fetch_recipe_by_name(data, items=[])
+        items = db_helper.fetch_recipe_by_name(data)
         return render_template("recipe_search.html", items=items)
     return render_template("recipe_search.html", items=[])
 

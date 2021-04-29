@@ -549,6 +549,37 @@ def update_tag(recipe_id, tag_old, tag_new):
     conn.close()
 # def remove_user(user_id):
 
+def add_recipe_by_id(id, recipe_id):
+    conn = db.connect()
+    query = 'Insert Into PersonalizedListContainsRecipes (recipe_id, list_id) VALUES ("{}", "{}");'.format(
+    recipe_id, id) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+    return fetch_list_recipes(id)
+
+def delete_recipe_by_id(id, recipe_id):
+    conn = db.connect()
+    query = "DELETE FROM PersonalizedListContainsRecipes WHERE list_id = {} AND recipe_id = {};".format(id, recipe_id) #type 0 means recipe
+    conn.execute(query)
+    conn.close()
+    return fetch_list_recipes(id)
+
+def fetch_list_recipes(id):
+    conn = db.connect()
+    query = "SELECT recipe_id, name FROM PersonalizedListContainsRecipes NATURAL JOIN Recipe WHERE list_id = {};".format(id)
+    query_results = conn.execute(query).fetchall()
+
+    conn.close()
+    list_name = []
+    for result in query_results:
+        item = {
+            "id": result[0],
+            "name":result[1]
+        }
+        list_name.append(item)
+
+    return list_name
+
 
 class User:
     def __init__(self, user_id, username, name, email, password):
