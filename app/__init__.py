@@ -2,7 +2,13 @@
 import os
 import sqlalchemy
 from flask import Flask
+# from flask_sqlalchemy import SQLAlchemy
 from yaml import load, Loader
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from app.settings import save_min_ingredient_id, init_min_ing_id
+import atexit
+
 
 def init_connection_engine():
     """ initialize database setup
@@ -40,7 +46,13 @@ def init_connection_engine():
 
 app = Flask(__name__)
 # other_db = SQLAlchemy(app)
+# print(type(other_db))
 db = init_connection_engine()
+sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db)
+base = declarative_base()
+
+init_min_ing_id()
+atexit.register(save_min_ingredient_id)
 
 # To prevent from using a blueprint, we use a cyclic import
 # This also means that we need to place this import here
